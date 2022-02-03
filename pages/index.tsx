@@ -3,6 +3,7 @@ import Head from "next/head";
 import React from "react";
 import styles from "../styles/Home.module.css";
 import { One } from "../synths/one";
+import { Two } from "../synths/two";
 
 const Home: NextPage = () => {
   return (
@@ -23,6 +24,11 @@ const Home: NextPage = () => {
             #synthruary
           </a>
         </h1>
+
+        <a href="#2">
+          <h2 id="2">2. arpeggiators</h2>
+        </a>
+        <Two />
 
         <a href="#1">
           <h2 id="1">1. minimalism</h2>

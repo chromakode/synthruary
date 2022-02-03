@@ -10,13 +10,15 @@ class TwoSynth implements Synth {
   ctx: AudioContext;
   noteInterval: number = 1;
   freq: number = 200;
+  bend: number = 200;
   filter: BiquadFilterNode;
   index: number = 0;
   count: number = 1;
   width: number = 1 / 3;
   queuedNote: number | null = null;
   lastNoteEnd: number | null = null;
-  cancelNote: () => void = () => {};
+  oscs: Set<() => void> = new Set();
+  cancelNote: (stop? : boolean) => void = () => {};
 
   constructor() {
     this.ctx = getAudioContext();
@@ -32,11 +34,14 @@ class TwoSynth implements Synth {
   note(time: number, onEnd: () => void) {
     const endTime = time + this.ATTACK + this.noteInterval;
     const createOsc = (factor: number, type: OscillatorType) => {
-      const freq = this.freq + (this.freq / this.width) * this.index;
+      const { width, index, freq } = this;
+      const updateFreq = () => {
+        osc.frequency.value = factor * (freq + this.bend) * (1 + width * index);
+      };
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
       osc.type = type;
-      osc.frequency.value = freq * factor;
+      updateFreq();
       osc?.start(time);
       osc?.stop(endTime + this.RELEASE);
       gain.gain.setValueAtTime(0, time);
@@ -47,6 +52,10 @@ class TwoSynth implements Synth {
       );
       gain.gain.linearRampToValueAtTime(0, endTime + this.RELEASE);
       connect(osc, gain, this.filter);
+      this.oscs.add(updateFreq);
+      osc.addEventListener("ended", () => {
+        this.oscs.delete(updateFreq);
+      });
       return osc;
     };
     const osc = createOsc(1, "square");
@@ -54,11 +63,13 @@ class TwoSynth implements Synth {
     const osc3 = createOsc(1 / 2, "square");
     const timeout = setTimeout(onEnd, 1000 * (endTime - this.ctx.currentTime));
     this.queuedNote = time;
-    this.cancelNote = () => {
+    this.cancelNote = (stop = true) => {
       clearTimeout(timeout);
-      osc.disconnect();
-      osc2.disconnect();
-      osc3.disconnect();
+      if (stop) {
+        osc.disconnect();
+        osc2.disconnect();
+        osc3.disconnect();
+      }
       this.queuedNote = null;
     };
   }
@@ -81,18 +92,20 @@ class TwoSynth implements Synth {
       this.cancelNote();
       this.queueNote();
     }
-    this.freq = 20 + 220 * x;
-    this.count = 1 + Math.round(5 * x);
-    this.width = 1 / y;
-    this.noteInterval = 0.25 / Math.pow(5, x);
-    this.filter.frequency.value = 20000 * x;
+    this.freq = 20 + 110 * x;
+    this.bend = 110 * y;
+    this.oscs.forEach((updateFreq) => updateFreq());
+    this.count = 1 + Math.round(9 * y);
+    this.width = 1;
+    this.noteInterval = 0.06 / Math.pow(5, x);
+    this.filter.frequency.value = 440 + 20000 * x;
     if (this.queuedNote === null) {
       this.queueNote();
     }
   }
 
   end() {
-    this.cancelNote();
+    this.cancelNote(false);
     this.lastNoteEnd = null;
   }
 }

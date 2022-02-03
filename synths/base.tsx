@@ -112,6 +112,16 @@ export function SynthBox<S extends Synth>({
     };
   }, [isActive]);
 
+  useEffect(() => {
+    if (synth.current) {
+      synth.current?.end();
+      synth.current = new SynthClass();
+    }
+    return () => {
+      synth.current?.end();
+    };
+  }, [SynthClass]);
+
   return (
     <div
       ref={ref}

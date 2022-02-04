@@ -1,4 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  Children,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import classNames from "classnames";
 import { clamp } from "lodash";
 import styles from "../styles/Home.module.css";
@@ -47,9 +54,11 @@ function posTouch(ev: React.TouchEvent<HTMLElement>): [number, number] {
 export function SynthBox<S extends Synth>({
   className,
   synth: SynthClass,
+  children,
 }: {
   className: string;
-  synth: { new (): S };
+  synth: { new ({ el }: { el: HTMLElement }): S };
+  children?: ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [isActive, setActive] = useState(false);
@@ -57,7 +66,7 @@ export function SynthBox<S extends Synth>({
 
   const handleMouseDown = useCallback((ev) => {
     if (!synth.current) {
-      synth.current = new SynthClass();
+      synth.current = new SynthClass({ el: ref.current! });
     }
     synth.current.start(...posMouse(ev, ref.current!));
     setActive(true);
@@ -75,7 +84,7 @@ export function SynthBox<S extends Synth>({
 
   const handleTouchStart = useCallback((ev) => {
     if (!synth.current) {
-      synth.current = new SynthClass();
+      synth.current = new SynthClass({ el: ref.current! });
     }
     synth.current.start(...posTouch(ev));
     setActive(true);
@@ -115,7 +124,7 @@ export function SynthBox<S extends Synth>({
   useEffect(() => {
     if (synth.current) {
       synth.current?.end();
-      synth.current = new SynthClass();
+      synth.current = new SynthClass({ el: ref.current! });
     }
     return () => {
       synth.current?.end();
@@ -130,6 +139,8 @@ export function SynthBox<S extends Synth>({
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-    ></div>
+    >
+      {children}
+    </div>
   );
 }

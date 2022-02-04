@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import styles from "../styles/Home.module.css";
 import { Synth, getAudioContext, connect, SynthBox } from "./base";
 import Freeverb from "freeverb";
@@ -81,9 +81,19 @@ class ThreeSynth implements Synth {
 }
 
 export function Three() {
+  const handlePreventDefault = useCallback(
+    (ev: React.MouseEvent | React.TouchEvent) => {
+      ev.preventDefault();
+    },
+    []
+  );
   return (
     <SynthBox className={styles.canvas} synth={ThreeSynth}>
-      <video src="/concrete.mp4" className={styles.video} />
+      <video
+        src="/concrete.mp4"
+        className={styles.video}
+        onContextMenu={handlePreventDefault}
+      />
     </SynthBox>
   );
 }

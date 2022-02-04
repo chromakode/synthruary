@@ -1,12 +1,16 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import React from "react";
+import React, { useCallback, useState } from "react";
 import styles from "../styles/Home.module.css";
 import { One } from "../synths/one";
 import { Two } from "../synths/two";
 import { Three } from "../synths/three";
 
 const Home: NextPage = () => {
+  const [hasInteracted, setHasInteracted] = useState(false);
+  const handleInteract = useCallback(() => {
+    setHasInteracted(true);
+  }, []);
   return (
     <div className={styles.container}>
       <Head>
@@ -25,6 +29,10 @@ const Home: NextPage = () => {
             #synthruary
           </a>
         </h1>
+
+        {!hasInteracted && (
+          <button onClick={handleInteract}>start synths</button>
+        )}
 
         <a href="#3">
           <h2 id="3">3. musique concrète &mdash; &ldquo;garbage day&rdquo;</h2>

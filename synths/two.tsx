@@ -18,7 +18,7 @@ class TwoSynth implements Synth {
   queuedNote: number | null = null;
   lastNoteEnd: number | null = null;
   oscs: Set<() => void> = new Set();
-  cancelNote: (stop? : boolean) => void = () => {};
+  cancelNote: (stop?: boolean) => void = () => {};
 
   constructor() {
     this.ctx = getAudioContext();

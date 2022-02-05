@@ -32,6 +32,8 @@
   user-select: none;
   display: flex;
   overflow: hidden;
+  align-items: center;
+  justify-content: center;
 }
 
 .canvas.active {
@@ -44,4 +46,9 @@
   object-fit: cover;
   opacity: 0;
   pointer-events: none;
+}
+
+.mode {
+  font-size: 2rem;
+  color: gray;
 }

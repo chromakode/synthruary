@@ -5,6 +5,7 @@ import styles from "../styles/Home.module.css";
 import { One } from "../synths/one";
 import { Two } from "../synths/two";
 import { Three } from "../synths/three";
+import { Four } from "../synths/four";
 
 const Home: NextPage = () => {
   const [hasInteracted, setHasInteracted] = useState(false);
@@ -33,6 +34,11 @@ const Home: NextPage = () => {
         {!hasInteracted && (
           <button onClick={handleInteract}>start synths</button>
         )}
+
+        <a href="#4">
+          <h2 id="4">4. pick a mode</h2>
+        </a>
+        <Four />
 
         <a href="#3">
           <h2 id="3">3. musique concrète &mdash; &ldquo;garbage day&rdquo;</h2>

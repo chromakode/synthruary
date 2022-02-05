@@ -64,13 +64,18 @@ export function SynthBox<S extends Synth>({
   const [isActive, setActive] = useState(false);
   const synth = useRef<S>();
 
-  const handleMouseDown = useCallback((ev) => {
-    if (!synth.current) {
-      synth.current = new SynthClass({ el: ref.current! });
-    }
-    synth.current.start(...posMouse(ev, ref.current!));
-    setActive(true);
-  }, []);
+  const handleMouseDown = useCallback(
+    (ev) => {
+      if (!synth.current) {
+        synth.current = new SynthClass({ el: ref.current! });
+      }
+      if (!isActive) {
+        synth.current.start(...posMouse(ev, ref.current!));
+        setActive(true);
+      }
+    },
+    [isActive]
+  );
   const handleMouseMove = useCallback(
     (ev) => {
       synth.current?.update(...posMouse(ev, ref.current!));
@@ -82,13 +87,18 @@ export function SynthBox<S extends Synth>({
     setActive(false);
   }, []);
 
-  const handleTouchStart = useCallback((ev) => {
-    if (!synth.current) {
-      synth.current = new SynthClass({ el: ref.current! });
-    }
-    synth.current.start(...posTouch(ev));
-    setActive(true);
-  }, []);
+  const handleTouchStart = useCallback(
+    (ev) => {
+      if (!synth.current) {
+        synth.current = new SynthClass({ el: ref.current! });
+      }
+      if (!isActive) {
+        synth.current.start(...posTouch(ev));
+        setActive(true);
+      }
+    },
+    [isActive]
+  );
   const handleTouchMove = useCallback(
     (ev) => {
       if (isActive) {

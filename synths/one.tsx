@@ -31,8 +31,8 @@ class OneSynth implements Synth {
     const gain = this.ctx.createGain();
     osc.type = "sawtooth";
     osc.frequency.value = this.freq;
-    osc?.start(time);
-    osc?.stop(time + this.ATTACK + this.HOLD + this.RELEASE);
+    osc.start(time);
+    osc.stop(time + this.ATTACK + this.HOLD + this.RELEASE);
     gain.gain.setValueAtTime(0, time);
     gain.gain.linearRampToValueAtTime(this.GAIN, time + this.ATTACK);
     gain.gain.setValueAtTime(this.GAIN, time + this.ATTACK + this.HOLD);

@@ -1,12 +1,14 @@
 import React, {
   ReactNode,
   useCallback,
+  useContext,
   useEffect,
   useRef,
   useState,
 } from "react";
 import classNames from "classnames";
-import { clamp } from "lodash";
+import { clamp, noop } from "lodash";
+import { MdPlayCircle } from "react-icons/md";
 import styles from "../styles/Home.module.css";
 
 let _ctx: AudioContext | undefined;
@@ -50,6 +52,33 @@ function posTouch(ev: React.TouchEvent<HTMLElement>): [number, number] {
   return [x, y];
 }
 
+interface SynthContextState {
+  ready: boolean;
+  handleInit: () => void;
+}
+
+const SynthContext = React.createContext<SynthContextState>({
+  ready: false,
+  handleInit: noop,
+});
+
+export function SynthWrapper({ children }: { children: ReactNode }) {
+  const [ready, setReady] = useState<boolean>(false);
+  const handleInit = useCallback(() => {
+    // Audio context must wait until interaction
+    getAudioContext();
+    setReady(true);
+  }, []);
+  const state = { ready, handleInit };
+  return (
+    <SynthContext.Provider value={state}>{children}</SynthContext.Provider>
+  );
+}
+
+function useSynthState() {
+  return useContext(SynthContext);
+}
+
 export function SynthBox<S extends Synth, ST>({
   className,
   synth: SynthClass,
@@ -70,6 +99,7 @@ export function SynthBox<S extends Synth, ST>({
   children?: ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const synthState = useSynthState();
   const [isActive, setActive] = useState(false);
   const synth = useRef<S>();
 
@@ -150,15 +180,32 @@ export function SynthBox<S extends Synth, ST>({
     };
   }, [SynthClass]);
 
+  const interactHandlers = synthState.ready
+    ? {
+        onMouseDown: handleMouseDown,
+        onTouchStart: handleTouchStart,
+        onTouchMove: handleTouchMove,
+        onTouchEnd: handleTouchEnd,
+      }
+    : {};
+
+  const readyOverlay = synthState.ready ? null : (
+    <button
+      className={styles.readyButton}
+      onClick={synthState.handleInit}
+      aria-label="Start synth"
+    >
+      <MdPlayCircle className={styles.playIcon} />
+    </button>
+  );
+
   return (
     <div
       ref={ref}
       className={classNames(className, { [styles.active]: isActive })}
-      onMouseDown={handleMouseDown}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
+      {...interactHandlers}
     >
+      {readyOverlay}
       {children}
     </div>
   );

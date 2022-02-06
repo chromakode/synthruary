@@ -6,6 +6,7 @@ import { One } from "../synths/one";
 import { Two } from "../synths/two";
 import { Three } from "../synths/three";
 import { Four } from "../synths/four";
+import { SynthWrapper } from "../synths/base";
 
 const Home: NextPage = () => {
   const [hasInteracted, setHasInteracted] = useState(false);
@@ -31,29 +32,29 @@ const Home: NextPage = () => {
           </a>
         </h1>
 
-        {!hasInteracted && (
-          <button onClick={handleInteract}>start synths</button>
-        )}
+        <SynthWrapper>
+          <a href="#4">
+            <h2 id="4">4. pick a mode</h2>
+          </a>
+          <Four />
 
-        <a href="#4">
-          <h2 id="4">4. pick a mode</h2>
-        </a>
-        <Four />
+          <a href="#3">
+            <h2 id="3">
+              3. musique concrète &mdash; &ldquo;garbage day&rdquo;
+            </h2>
+          </a>
+          <Three />
 
-        <a href="#3">
-          <h2 id="3">3. musique concrète &mdash; &ldquo;garbage day&rdquo;</h2>
-        </a>
-        <Three />
+          <a href="#2">
+            <h2 id="2">2. arpeggiators</h2>
+          </a>
+          <Two />
 
-        <a href="#2">
-          <h2 id="2">2. arpeggiators</h2>
-        </a>
-        <Two />
-
-        <a href="#1">
-          <h2 id="1">1. minimalism</h2>
-        </a>
-        <One />
+          <a href="#1">
+            <h2 id="1">1. minimalism</h2>
+          </a>
+          <One />
+        </SynthWrapper>
       </main>
     </div>
   );

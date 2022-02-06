@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import classNames from "classnames";
 import { clamp, noop } from "lodash";
+import { CircularProgress } from "@chakra-ui/progress";
 import { MdPlayCircle } from "react-icons/md";
 import styles from "../styles/Home.module.css";
 
@@ -30,6 +31,7 @@ export function connect(...nodes: AudioNode[]) {
 }
 
 export interface Synth {
+  load?(): Promise<void>;
   start(x: number, y: number): void;
   update(x: number, y: number): void;
   end(): void;
@@ -52,33 +54,6 @@ function posTouch(ev: React.TouchEvent<HTMLElement>): [number, number] {
   return [x, y];
 }
 
-interface SynthContextState {
-  ready: boolean;
-  handleInit: () => void;
-}
-
-const SynthContext = React.createContext<SynthContextState>({
-  ready: false,
-  handleInit: noop,
-});
-
-export function SynthWrapper({ children }: { children: ReactNode }) {
-  const [ready, setReady] = useState<boolean>(false);
-  const handleInit = useCallback(() => {
-    // Audio context must wait until interaction
-    getAudioContext();
-    setReady(true);
-  }, []);
-  const state = { ready, handleInit };
-  return (
-    <SynthContext.Provider value={state}>{children}</SynthContext.Provider>
-  );
-}
-
-function useSynthState() {
-  return useContext(SynthContext);
-}
-
 export function SynthBox<S extends Synth, ST>({
   className,
   synth: SynthClass,
@@ -99,17 +74,34 @@ export function SynthBox<S extends Synth, ST>({
   children?: ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const synthState = useSynthState();
+  const [isReady, setReady] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const [isActive, setActive] = useState(false);
   const synth = useRef<S>();
 
+  const createSynth = useCallback(() => {
+    if (synth.current) {
+      return;
+    }
+    synth.current = new SynthClass({ el: ref.current!, updateState });
+  }, []);
+
+  const handleInit = useCallback(async () => {
+    // Init and cache AudioContext on interaction
+    getAudioContext();
+    createSynth();
+    if (synth.current?.load) {
+      setLoading(true);
+      await synth.current.load();
+      setLoading(false);
+    }
+    setReady(true);
+  }, []);
+
   const handleMouseDown = useCallback(
     (ev) => {
-      if (!synth.current) {
-        synth.current = new SynthClass({ el: ref.current!, updateState });
-      }
       if (!isActive) {
-        synth.current.start(...posMouse(ev, ref.current!));
+        synth.current?.start(...posMouse(ev, ref.current!));
         setActive(true);
       }
     },
@@ -128,11 +120,8 @@ export function SynthBox<S extends Synth, ST>({
 
   const handleTouchStart = useCallback(
     (ev) => {
-      if (!synth.current) {
-        synth.current = new SynthClass({ el: ref.current!, updateState });
-      }
       if (!isActive) {
-        synth.current.start(...posTouch(ev));
+        synth.current?.start(...posTouch(ev));
         setActive(true);
       }
     },
@@ -173,14 +162,14 @@ export function SynthBox<S extends Synth, ST>({
   useEffect(() => {
     if (synth.current) {
       synth.current?.end();
-      synth.current = new SynthClass({ el: ref.current!, updateState });
+      createSynth();
     }
     return () => {
       synth.current?.end();
     };
   }, [SynthClass]);
 
-  const interactHandlers = synthState.ready
+  const interactHandlers = isReady
     ? {
         onMouseDown: handleMouseDown,
         onTouchStart: handleTouchStart,
@@ -189,20 +178,27 @@ export function SynthBox<S extends Synth, ST>({
       }
     : {};
 
-  const readyOverlay = synthState.ready ? null : (
+  const readyOverlay = isReady ? null : (
     <button
       className={styles.readyButton}
-      onClick={synthState.handleInit}
+      onClick={handleInit}
       aria-label="Start synth"
     >
-      <MdPlayCircle className={styles.playIcon} />
+      {isLoading ? (
+        <CircularProgress isIndeterminate />
+      ) : (
+        <MdPlayCircle className={styles.playIcon} />
+      )}
     </button>
   );
 
   return (
     <div
       ref={ref}
-      className={classNames(className, { [styles.active]: isActive })}
+      className={classNames(className, {
+        [styles.ready]: isReady,
+        [styles.active]: isActive,
+      })}
       {...interactHandlers}
     >
       {readyOverlay}

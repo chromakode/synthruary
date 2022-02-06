@@ -6,7 +6,6 @@ import { One } from "../synths/one";
 import { Two } from "../synths/two";
 import { Three } from "../synths/three";
 import { Four } from "../synths/four";
-import { SynthWrapper } from "../synths/base";
 
 const Home: NextPage = () => {
   const [hasInteracted, setHasInteracted] = useState(false);
@@ -32,7 +31,6 @@ const Home: NextPage = () => {
           </a>
         </h1>
 
-        <SynthWrapper>
           <a href="#4">
             <h2 id="4">4. pick a mode</h2>
           </a>
@@ -54,7 +52,6 @@ const Home: NextPage = () => {
             <h2 id="1">1. minimalism</h2>
           </a>
           <One />
-        </SynthWrapper>
       </main>
     </div>
   );

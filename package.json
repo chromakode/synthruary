@@ -8,6 +8,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/progress": "^1.2.4",
     "@tonaljs/tonal": "^4.6.5",
     "classnames": "^2.3.1",
     "freeverb": "^1.1.2",

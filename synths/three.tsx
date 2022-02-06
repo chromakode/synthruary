@@ -33,6 +33,13 @@ class ThreeSynth implements Synth {
     connect(this.mediaNode, this.reverb, this.filter, this.ctx.destination);
   }
 
+  async load() {
+    const resp = await fetch("/concrete.mp4");
+    const blob = await resp.blob();
+    const videoURL = URL.createObjectURL(blob);
+    this.video.src = videoURL;
+  }
+
   pulse = () => {
     if (this.beat.length === 0) {
       return;
@@ -89,11 +96,7 @@ export function Three() {
   );
   return (
     <SynthBox className={styles.canvas} synth={ThreeSynth}>
-      <video
-        src="/concrete.mp4"
-        className={styles.video}
-        onContextMenu={handlePreventDefault}
-      />
+      <video className={styles.video} onContextMenu={handlePreventDefault} />
     </SynthBox>
   );
 }

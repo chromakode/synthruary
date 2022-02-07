@@ -60,7 +60,7 @@ class ThreeSynth implements Synth {
     this.reverb.wet.value = Math.sin(Math.PI * 1.05 * y);
     this.reverb.dry.value = 1 - this.reverb.wet.value;
     this.filter.frequency.value = 20000 - 19000 * x;
-    this.video.style.filter = `blur(${y > 0.75 ? 50 * (y - 0.75) * 4 : x}px)`;
+    this.video.style.filter = `blur(${y > 0.75 ? 4 * (y - 0.75) * 4 : 0}vmin)`;
     this.video.style.transform = `scale(${Math.max(100, 120 * y)}%)`;
     this.delay = 500 - 450 * y;
 

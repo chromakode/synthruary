@@ -60,7 +60,7 @@ CCCCTTGGGCCTCCCCCCAGCCCCTCCTCCCCTTCCTGCACCCGTACCCCCGTGGTCTTTGAATAAAGTCTGAGTGGGCG
   .replace(/[^ATGC]/g, "")
   .replace(/T/g, "D");
 
-const COLORS = ["red", "green", "blue", "purple", "orange"];
+const COLORS = ["red", "green", "blue", "purple", "orange", "teal"];
 
 interface Run {
   voice: number;
@@ -109,7 +109,7 @@ class FiveSynth implements Synth {
   async load() {
     const [a, d, g, c] = await Promise.all(
       ["a", "d", "g", "c"].map((n) =>
-        loadBuffers(...range(1, 6).map((v) => `/adgc/${n}${v}.wav`))
+        loadBuffers(...range(1, 7).map((v) => `/adgc/${n}${v}.wav`))
       )
     );
     this.buffers = { a, d, g, c };

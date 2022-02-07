@@ -6,6 +6,7 @@ import { One } from "../synths/one";
 import { Two } from "../synths/two";
 import { Three } from "../synths/three";
 import { Four } from "../synths/four";
+import { Five } from "../synths/five";
 
 const Home: NextPage = () => {
   const [hasInteracted, setHasInteracted] = useState(false);
@@ -31,27 +32,30 @@ const Home: NextPage = () => {
           </a>
         </h1>
 
-          <a href="#4">
-            <h2 id="4">4. pick a mode</h2>
-          </a>
-          <Four />
+        <a href="#5">
+          <h2 id="5">5. aleatoric &mdash; &ldquo;mRNA-1273&rdquo;</h2>
+        </a>
+        <Five />
 
-          <a href="#3">
-            <h2 id="3">
-              3. musique concrète &mdash; &ldquo;garbage day&rdquo;
-            </h2>
-          </a>
-          <Three />
+        <a href="#4">
+          <h2 id="4">4. pick a mode</h2>
+        </a>
+        <Four />
 
-          <a href="#2">
-            <h2 id="2">2. arpeggiators</h2>
-          </a>
-          <Two />
+        <a href="#3">
+          <h2 id="3">3. musique concrète &mdash; &ldquo;garbage day&rdquo;</h2>
+        </a>
+        <Three />
 
-          <a href="#1">
-            <h2 id="1">1. minimalism</h2>
-          </a>
-          <One />
+        <a href="#2">
+          <h2 id="2">2. arpeggiators</h2>
+        </a>
+        <Two />
+
+        <a href="#1">
+          <h2 id="1">1. minimalism</h2>
+        </a>
+        <One />
       </main>
     </div>
   );

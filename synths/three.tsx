@@ -24,9 +24,7 @@ class ThreeSynth implements Synth {
   constructor({ el }: { el: HTMLElement }) {
     this.ctx = getAudioContext();
     this.video = el.getElementsByTagName("video")[0];
-    this.video.preload = "auto";
     this.video.loop = true;
-    this.video.load();
     this.mediaNode = this.ctx.createMediaElementSource(this.video);
     this.reverb = Freeverb(this.ctx);
     this.filter = this.ctx.createBiquadFilter();

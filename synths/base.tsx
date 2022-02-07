@@ -30,6 +30,16 @@ export function connect(...nodes: AudioNode[]) {
   }
 }
 
+export async function loadBuffers(...urls: string[]): Promise<AudioBuffer[]> {
+  async function load(url: string): Promise<AudioBuffer> {
+    const resp = await fetch(url);
+    const arrayb = await resp.arrayBuffer();
+    const buffer = await getAudioContext().decodeAudioData(arrayb);
+    return buffer;
+  }
+  return Promise.all(urls.map((url) => load(url)));
+}
+
 export interface Synth {
   load?(): Promise<void>;
   start(x: number, y: number): void;
@@ -201,7 +211,7 @@ export function SynthBox<S extends Synth, ST>({
       })}
       {...interactHandlers}
     >
-      {readyOverlay}
+      {!isReady && readyOverlay}
       {children}
     </div>
   );

@@ -85,7 +85,7 @@ class FiveSynth implements Synth {
   ctx: AudioContext;
   reverb: Freeverb;
   buffers: Record<string, AudioBuffer[]> = { a: [], d: [], g: [], c: [] };
-  nextVoice: number = 0;
+  nextVoice: number = -1;
   hold: number = 0.1;
   attack: number = 0.1;
   release: number = 0.75;
@@ -113,7 +113,6 @@ class FiveSynth implements Synth {
       )
     );
     this.buffers = { a, d, g, c };
-    this.nextVoice = random(a.length);
   }
 
   queueUpdate() {
@@ -171,7 +170,7 @@ class FiveSynth implements Synth {
       voice: this.nextVoice,
       pan: -0.5 + Math.random(),
       interval: sample([1 / 2, 2 / 3])!,
-      idx: random(BASE_PAIRS.length - 1),
+      idx: this.runs.length === 0 ? -1 : random(BASE_PAIRS.length - 1),
       nextTime: 0,
       delay: 0,
       timeout: undefined,
@@ -239,7 +238,8 @@ export function Five() {
       if (!run.timeout) {
         continue;
       }
-      const el = pairsRef.current.children[run.idx] as HTMLSpanElement;
+      const idx = Math.max(0, run.idx);
+      const el = pairsRef.current.children[idx] as HTMLSpanElement;
       el.style.transitionDuration = `${state.duration}s`;
       el.style.backgroundColor = COLORS[run.voice];
       el.classList.add(styles.playing);

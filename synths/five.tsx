@@ -220,7 +220,7 @@ export function Five() {
     if (pairsRef.current.childElementCount === 0) {
       for (let i = 0; i < state.data.length; i++) {
         const l = state.data[i];
-        const spanEl = document.createElement("span");
+        const spanEl = document.createElement("div");
         spanEl.innerText = l;
         spanEl.className = styles.basePair;
         spanEl.style.left = `${0.5 + 99 * ((i % COLS) / COLS)}%`;

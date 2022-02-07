@@ -7,6 +7,7 @@ import { Two } from "../synths/two";
 import { Three } from "../synths/three";
 import { Four } from "../synths/four";
 import { Five } from "../synths/five";
+import { Six } from "../synths/six";
 
 const Home: NextPage = () => {
   const [hasInteracted, setHasInteracted] = useState(false);
@@ -31,6 +32,11 @@ const Home: NextPage = () => {
             #synthruary
           </a>
         </h1>
+
+        <a href="#6">
+          <h2 id="6">6. drones</h2>
+        </a>
+        <Six />
 
         <a href="#5">
           <h2 id="5">5. aleatoric &mdash; &ldquo;mRNA-1273&rdquo;</h2>

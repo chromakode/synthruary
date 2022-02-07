@@ -94,7 +94,7 @@ export function SynthBox<S extends Synth, ST>({
       return;
     }
     synth.current = new SynthClass({ el: ref.current!, updateState });
-  }, []);
+  }, [SynthClass]);
 
   const handleInit = useCallback(async () => {
     // Init and cache AudioContext on interaction
@@ -172,6 +172,7 @@ export function SynthBox<S extends Synth, ST>({
   useEffect(() => {
     if (synth.current) {
       synth.current?.end();
+      synth.current = undefined;
       createSynth();
     }
     return () => {

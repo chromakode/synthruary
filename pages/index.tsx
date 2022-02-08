@@ -30,6 +30,11 @@ const Home: NextPage = () => {
           </a>
         </h1>
 
+        <a href="#7">
+          <h2 id="7">7. raindrops</h2>
+        </a>
+        <Seven />
+
         <a href="#6">
           <h2 id="6">6. drones</h2>
         </a>

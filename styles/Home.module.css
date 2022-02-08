@@ -102,3 +102,8 @@
   font-weight: bold;
   transition-duration: 0s !important;
 }
+
+.canvas canvas {
+  width: 100%;
+  height: 100%;
+}

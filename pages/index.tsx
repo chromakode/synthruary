@@ -8,12 +8,9 @@ import { Three } from "../synths/three";
 import { Four } from "../synths/four";
 import { Five } from "../synths/five";
 import { Six } from "../synths/six";
+import { Seven } from "../synths/seven";
 
 const Home: NextPage = () => {
-  const [hasInteracted, setHasInteracted] = useState(false);
-  const handleInteract = useCallback(() => {
-    setHasInteracted(true);
-  }, []);
   return (
     <div className={styles.container}>
       <Head>

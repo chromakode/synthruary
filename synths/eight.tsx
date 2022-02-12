@@ -95,6 +95,7 @@ export function Eight() {
       }
     }
     ctx.strokeStyle = "white";
+    ctx.lineWidth = 1.5;
     ctx.stroke();
   }, [state]);
   return (

@@ -9,6 +9,7 @@ import { Four } from "../synths/four";
 import { Five } from "../synths/five";
 import { Six } from "../synths/six";
 import { Seven } from "../synths/seven";
+import { Eight } from "../synths/eight";
 
 const Home: NextPage = () => {
   return (
@@ -29,6 +30,13 @@ const Home: NextPage = () => {
             #synthruary
           </a>
         </h1>
+
+        <a href="#8">
+          <h2 id="8">
+            8. west coast synthesis &mdash; &ldquo;wavefolder&rdquo;
+          </h2>
+        </a>
+        <Eight />
 
         <a href="#7">
           <h2 id="7">7. raindrops</h2>

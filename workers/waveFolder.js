@@ -7,10 +7,7 @@ export function processWaveFolder(inputs, outputs) {
   for (let i = 0; i < output.length; i++) {
     const inVal = input[i];
     const wraps = Math.trunc((inVal + Math.sign(inVal)) / 2);
-    const val =
-      wraps % 2
-        ? Math.sign(inVal) - (inVal - (2 * wraps - Math.sign(inVal)))
-        : inVal - 2 * wraps;
+    const val = wraps % 2 ? -(inVal - 2 * wraps) : inVal - 2 * wraps;
     output[i] = val;
   }
   return;

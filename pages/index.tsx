@@ -10,6 +10,7 @@ import { Five } from "../synths/five";
 import { Six } from "../synths/six";
 import { Seven } from "../synths/seven";
 import { Eight } from "../synths/eight";
+import { Nine } from "../synths/nine";
 
 const Home: NextPage = () => {
   return (
@@ -30,6 +31,11 @@ const Home: NextPage = () => {
             #synthruary
           </a>
         </h1>
+
+        <a href="#9">
+          <h2 id="9">9. percussion &mdash; &ldquo;fractal drums&rdquo;</h2>
+        </a>
+        <Nine />
 
         <a href="#8">
           <h2 id="8">

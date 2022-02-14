@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import styles from "../styles/Home.module.css";
-import { Synth, getAudioContext, connect, SynthBox } from "./base";
+import { Synth, getAudioContext, connect, SynthBox, posmod } from "./base";
 import Freeverb from "freeverb";
 import seedrandom from "seedrandom";
 
@@ -74,7 +74,7 @@ class ThreeSynth implements Synth {
     }
     const n = this.TIMES.length;
     for (let i = 1; i <= Math.round(31 * y) + 1; i++) {
-      this.beat.push(((rng.int32() % n) + n) % n);
+      this.beat.push(posmod(rng.int32(), n));
     }
   }
 

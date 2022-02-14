@@ -40,6 +40,10 @@ export async function loadBuffers(...urls: string[]): Promise<AudioBuffer[]> {
   return Promise.all(urls.map((url) => load(url)));
 }
 
+export function posmod(n: number, modulo: number): number {
+  return ((n % modulo) + modulo) % modulo;
+}
+
 export interface Synth {
   load?(): Promise<void>;
   start(x: number, y: number): void;
@@ -174,6 +178,7 @@ export function SynthBox<S extends Synth, ST>({
       synth.current?.end();
       synth.current = undefined;
       createSynth();
+      synth.current!.load?.();
     }
     return () => {
       synth.current?.end();

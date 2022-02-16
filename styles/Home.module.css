@@ -76,7 +76,8 @@
   pointer-events: none;
 }
 
-.mode {
+.mode,
+.prompt {
   font-size: 2rem;
   color: gray;
 }

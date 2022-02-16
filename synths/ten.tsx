@@ -39,7 +39,6 @@ class TenSynth implements Synth {
     this.curPhaseIdx += 1;
 
     if (this.curPhaseIdx > this.PHASES.length - 1) {
-      this.updateState?.({});
       return;
     }
 
@@ -120,10 +119,11 @@ class TenSynth implements Synth {
   end() {
     const { gain } = this;
     gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.1);
+    clearTimeout(this.timeout);
     setTimeout(() => {
       gain.disconnect();
     }, 100);
-    clearTimeout(this.timeout);
+    this.updateState?.({});
   }
 }
 

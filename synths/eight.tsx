@@ -57,6 +57,7 @@ class EightSynth implements Synth {
 
   end() {
     this.osc?.stop();
+    this.updateState?.({});
   }
 }
 
@@ -65,9 +66,10 @@ export function Eight() {
   const [state, setState] = useState<State>({});
   useLayoutEffect(() => {
     const ctx = canvas.current?.getContext("2d");
-    if (!ctx || state.gain === undefined) {
+    if (!ctx) {
       return;
     }
+
     const { width, height } = ctx.canvas.getBoundingClientRect();
     const w = Math.floor(width);
     const h = Math.floor(height);
@@ -77,6 +79,11 @@ export function Eight() {
     if (ctx.canvas.height !== h) {
       ctx.canvas.height = h;
     }
+    ctx.clearRect(0, 0, w, h);
+
+    if (state.gain === undefined) {
+      return;
+    }
 
     const input = new Float32Array(w);
     const output = new Float32Array(w);
@@ -84,7 +91,6 @@ export function Eight() {
       input[i] = state.gain * Math.sin(Math.PI * ((2 * i) / w - w));
     }
     processWaveFolder([[input]], [[output]]);
-    ctx.clearRect(0, 0, w, h);
     ctx.beginPath();
     for (let x = 0; x < w; x++) {
       const val = (1 - (output[x] + 1) / 2) * h;
